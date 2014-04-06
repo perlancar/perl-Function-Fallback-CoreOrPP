@@ -6,6 +6,8 @@ use warnings;
 
 # VERSION
 
+our $USE_XS = 1;
+
 require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(
@@ -15,29 +17,35 @@ our @EXPORT_OK = qw(
 
 sub clone {
     my $data = shift;
+    goto FALLBACK unless $USE_XS;
     eval { require Data::Clone };
-    if ($@) {
-        require Storable;
-        local $Storable::Deparse = 1;
-        local $Storable::Eval    = 1;
-        Storable::dclone($data);
-    } else {
-        Data::Clone::clone($data);
-    }
+    goto FALLBACK if $@;
+
+  STANDARD:
+    return Data::Clone::clone($data);
+
+  FALLBACK:
+    require Storable;
+    local $Storable::Deparse = 1;
+    local $Storable::Eval    = 1;
+    return Storable::dclone($data);
 }
 
 sub uniq {
+    goto FALLBACK unless $USE_XS;
     eval { require List::MoreUtils };
-    if ($@) {
-        my %h;
-        my @res;
-        for (@_) {
-            push @res, $_ unless $h{$_}++;
-        }
-        @res;
-    } else {
-        List::MoreUtils::uniq(@_);
+    goto FALLBACK if $@;
+
+  STANDARD:
+    return List::MoreUtils::uniq(@_);
+
+  FALLBACK:
+    my %h;
+    my @res;
+    for (@_) {
+        push @res, $_ unless $h{$_}++;
     }
+    return @res;
 }
 
 1;
