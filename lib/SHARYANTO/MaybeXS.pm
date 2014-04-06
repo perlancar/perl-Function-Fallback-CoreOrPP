@@ -74,7 +74,7 @@ using pure-Perl or core XS module.
 
 =head2 clone($data) => $cloned
 
-Try to use L<Data::Clone>'s C<clone>, but fallback to L<Storable>'s C<clone> (+
+Try to use L<Data::Clone>'s C<clone>, but fallback to L<Storable>'s C<dclone> (+
 Deparse and Eval option turned on). Note that currently Storable can't handle
 Regexp object out of the box.
 
