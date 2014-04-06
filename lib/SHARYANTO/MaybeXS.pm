@@ -8,16 +8,35 @@ use warnings;
 
 require Exporter;
 our @ISA       = qw(Exporter);
-our @EXPORT_OK = qw(clone);
+our @EXPORT_OK = qw(
+                       clone
+                       uniq
+               );
 
 sub clone {
     my $data = shift;
     eval { require Data::Clone };
     if ($@) {
         require Storable;
+        local $Storable::Deparse = 1;
+        local $Storable::Eval    = 1;
         Storable::dclone($data);
     } else {
         Data::Clone::clone($data);
+    }
+}
+
+sub uniq {
+    eval { require List::MoreUtils };
+    if ($@) {
+        my %h;
+        my @res;
+        for (@_) {
+            push @res, $_ unless $h{$_}++;
+        }
+        @res;
+    } else {
+        List::MoreUtils::uniq(@_);
     }
 }
 
@@ -28,7 +47,7 @@ sub clone {
 
 =head1 SYNOPSIS
 
- use SHARYANTO::MaybeXS qw(clone);
+ use SHARYANTO::MaybeXS qw(clone uniq);
 
  my $clone = clone({blah=>1});
 
@@ -48,6 +67,11 @@ usually need to be done using a non-core XS module.
 
 Try to use L<Data::Clone>'s C<clone>, but fallback to L<Storable>'s C<clone>.
 Note that currently Storable can't handle Regexp object out of the box.
+
+=head2 uniq(@ary) => @uniq_ary
+
+Try to use L<List::MoreUtils>'s C<uniq>, but fallback to using pure-Perl
+implementation.
 
 
 =head1 SEE ALSO
