@@ -18,8 +18,7 @@ our @EXPORT_OK = qw(
 sub clone {
     my $data = shift;
     goto FALLBACK unless $USE_XS;
-    eval { require Data::Clone };
-    goto FALLBACK if $@;
+    goto FALLBACK unless eval { require Data::Clone; 1 };
 
   STANDARD:
     return Data::Clone::clone($data);
@@ -33,8 +32,7 @@ sub clone {
 
 sub uniq {
     goto FALLBACK unless $USE_XS;
-    eval { require List::MoreUtils };
-    goto FALLBACK if $@;
+    goto FALLBACK unless eval { require List::MoreUtils; 1 };
 
   STANDARD:
     return List::MoreUtils::uniq(@_);
