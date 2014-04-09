@@ -24,10 +24,8 @@ sub clone {
     return Data::Clone::clone($data);
 
   FALLBACK:
-    require Storable;
-    local $Storable::Deparse = 1;
-    local $Storable::Eval    = 1;
-    return Storable::dclone($data);
+    require Clone::PP;
+    return Clone::PP::clone($data);
 }
 
 sub uniq {
@@ -72,9 +70,7 @@ using pure-Perl or core XS module.
 
 =head2 clone($data) => $cloned
 
-Try to use L<Data::Clone>'s C<clone>, but fallback to L<Storable>'s C<dclone> (+
-Deparse and Eval option turned on). Note that currently Storable can't handle
-Regexp object out of the box.
+Try to use L<Data::Clone>'s C<clone>, but fallback to L<Clone::PP>'s C<clone>.
 
 =head2 uniq(@ary) => @uniq_ary
 
@@ -83,5 +79,9 @@ implementation.
 
 
 =head1 SEE ALSO
+
+L<Clone::Any> can also uses multiple backends, but I avoid it because I don't
+think L<Storable>'s C<dclone> should be used (no Regexp support out of the box +
+must use deparse to handle coderefs).
 
 =cut
