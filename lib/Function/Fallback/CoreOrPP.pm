@@ -12,6 +12,7 @@ require Exporter;
 our @ISA       = qw(Exporter);
 our @EXPORT_OK = qw(
                        clone
+                       clone_list
                        unbless
                        uniq
                );
@@ -27,6 +28,10 @@ sub clone {
   FALLBACK:
     require Clone::PP;
     return Clone::PP::clone($data);
+}
+
+sub clone_list {
+    map { clone($_) } @_;
 }
 
 sub _unbless_fallback {
@@ -112,6 +117,12 @@ dependencies to your script.
 
 Try to use L<Data::Clone>'s C<clone>, but fall back to using L<Clone::PP>'s
 C<clone>.
+
+=head2 clone_list(@data) => @data
+
+A shortcut for:
+
+ return map {clone($_)} @data
 
 =head2 unbless($ref) => $unblessed_ref
 
