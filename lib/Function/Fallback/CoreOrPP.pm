@@ -51,6 +51,8 @@ sub _unbless_fallback {
         return [ @$ref ];
     } elsif ($r3 eq 'SCALAR') {
         return \( my $copy = ${$ref} );
+    } elsif ($r3 eq 'CODE') {
+        return sub { goto &$ref };
     } else {
         die "Can't handle $ref";
     }

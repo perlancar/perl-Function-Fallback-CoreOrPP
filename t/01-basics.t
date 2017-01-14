@@ -12,6 +12,7 @@ subtest "unbless" => sub {
     is_deeply(unbless(bless({}, "x")), {}, 'hash ref');
     is_deeply(unbless(bless([], "x")), [], 'array ref');
     is_deeply(unbless(bless(\( my $scalar = 1 ), "x")), \1, 'scalar ref');
+    is_deeply(unbless(bless(sub { 42 }, "x"))->(), 42, "code ref");
 };
 
 subtest "uniq" => sub {
