@@ -1,10 +1,13 @@
 package Function::Fallback::CoreOrPP;
 
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
 use 5.010001;
 use strict;
 use warnings;
-
-# VERSION
 
 our $USE_NONCORE_XS_FIRST = 1;
 
@@ -146,8 +149,9 @@ pure-Perl implementation.
 
 =head1 SEE ALSO
 
-L<Clone::Any> can also uses multiple backends, but I avoid it because I don't
-think L<Storable>'s C<dclone> should be used (no Regexp support out of the box +
-must use deparse to handle coderefs).
+L<Clone::Any> can also use multiple backends. I used to avoid it because
+L<Storable>'s C<dclone> (which is used as the backend) did not support Regexp
+objects out of the box until version 3.08. Plus must use deparse to handle
+coderefs.
 
 =cut
